@@ -19,28 +19,31 @@
 	h1 a:hover{color:var(--link-color); opacity:1}
 	body{margin:var(--gap); background-color:#ffffff; box-shadow:1px 1px 20px #898585; box-sizing:border-box; overflow:hidden;}
 
-	ul{max-height:calc(100vh - var(--gap) * 4 + 4em); overflow:auto; --ext:""}
-	li{float:left; margin:1em; position:relative;}
+	ul{max-height:calc(100vh - var(--gap) * 4 + 2em); overflow:auto; --ext:""; padding:0.5em;}
+	li{float:left; position:relative;}
 	li a{border-radius:5px; display:block; text-decoration:none; color:#333333; position:relative; border:5px solid transparent}
 	li a:hover{background-color:#eeeeee;}
-	li .title{display:block; font-size:1.1em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+	li .title{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 	li .size,
 	li .last-modified{color:gray;}
 	li .thumb{width:var(--thumb-size); height:var(--thumb-size)}
 	li img.thumb{object-fit:contain; background-color:#ffffff;}
 
+	ul[data-mode="tile"] li{margin:.25em;}
 	ul[data-mode="tile"] a{width:15em; height:3em; overflow:hidden; padding-left:calc(var(--thumb-size) + 0.75em); }
 	ul[data-mode="tile"] .thumb{position:absolute; left:0;}
 	ul[data-mode="tile"] .size{margin-left:1em;}
 
 	ul[data-mode="icon"]{--thumb-size:48px; padding:0.5em;}
-	ul[data-mode="icon"] li{margin:0 0.5em 0.5em 0;}
+	ul[data-mode="icon"] li{margin:0.25em}
 	ul[data-mode="icon"] a{width:6em; height:calc(var(--thumb-size) + 3em); overflow:hidden}
 	ul[data-mode="icon"] .last-modified,
 	ul[data-mode="icon"] .size{display:none;}
 	ul[data-mode="icon"] .title{text-align:center;}
 	ul[data-mode="icon"] .thumb{margin:0 auto 0.5em auto; display:block;}
 	ul[data-mode="icon"] li:before{display:none;}
+
+	li audio {position:absolute; z-index:2;}
 
 	[data-type="dir"] .size{display:none;}
 	li[data-ext]:before{content:var(--ext); font-size:var(--ext-size); color:gray; background-color:#eeeeee; z-index:1; opacity:0.8; position:absolute; margin:calc(var(--thumb-size) - var(--ext-size)) 0 0 calc(var(--thumb-size) - var(--ext-size))}
@@ -52,15 +55,25 @@
 	const ONE_M = 1024 * 1024;
 	const ONE_K = 1024;
 
+	const VIEW_MODE_ICON = 'icon';
+	const VIEW_MODE_TILE = 'tile';
+
 	const FOLD_SVG = '<svg t="1703145101119" class="thumb" viewBox="0 0 1194 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6587" width="200" height="200"><path d="M1090.17345393 277.75145411H83.33333333V133.91715166a71.91715166 71.91715166 0 0 1 71.91715166-71.91715166h251.71002949l143.83430332 143.83430332H1018.25630228a71.91715166 71.91715166 0 0 1 71.91715165 71.91715078z" p-id="6588" fill="#8a8a8a"></path><path d="M83.33333333 349.66860576m71.91715166 0l863.00581729 0q71.91715166 0 71.91715165 71.91715166l0 431.50290821q0 71.91715166-71.91715165 71.91715166l-863.00581729 0q-71.91715166 0-71.91715166-71.91715166l0-431.50290821q0-71.91715166 71.91715166-71.91715166Z" p-id="6589" fill="#8a8a8a"></path></svg>';
 	const FILE_SVG = '<svg t="1703144775181" class="thumb" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6412" width="200" height="200"><path d="M257.49387688 75.70378895C197.5758639 75.70378895 148.41982411 124.85982871 148.41982411 184.7778417v654.4443166c0 59.91801299 49.15603978 109.07405276 109.07405277 109.07405275h509.01224624c59.91801299 0 109.07405276-49.15603978 109.07405277-109.07405275V315.15769278L636.12627204 75.70378895z m0 72.71603516H584.71603518v218.14810554h218.14810553v472.65422865c0 20.43320588-15.9248117 36.35801759-36.35801759 36.35801759h-509.01224624a35.92172138 35.92172138 0 0 1-36.35801759-36.35801759v-654.4443166c0-20.43320588 15.9248117-36.35801759 36.35801759-36.35801759z m399.93819347 51.41023688L751.45390383 293.85189446H657.43207035z" fill="#707070" p-id="6413"></path></svg>';
-
+	const FOLD_PARENT = '<svg t="1703168274004" class="thumb" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8086" width="200" height="200"><path d="M0 0h1024v1024H0V0z" fill="#8a8a8a" opacity=".01" p-id="8087"></path><path d="M463.735467 122.402133a68.266667 68.266667 0 0 1 96.529066 0l307.2 307.2a68.266667 68.266667 0 1 1-96.529066 96.529067L580.266667 335.4624V853.333333a68.266667 68.266667 0 1 1-136.533334 0V335.4624l-190.6688 190.6688a68.266667 68.266667 0 1 1-96.529066-96.529067l307.2-307.2z" fill="#8a8a8a" p-id="8088"></path></svg>';
 	const isDir = fileAttr => {
 		return fileAttr && fileAttr.trim() === '-';
 	}
 
 	const isImg = fileName => {
 		return /\.(jpg|jpeg|webp|gif|png|svg)$/ig.test(fileName);
+	}
+
+	const isIndex = ()=>{
+		return document.title.indexOf('Index of') === 0
+			&& document.querySelector('h1')
+			&& document.querySelector('pre')
+			&& document.querySelector('hr');
 	}
 
 	const dateFormat = datetime => {
@@ -110,6 +123,9 @@
 
 
 	(() => {
+		if(!isIndex()){
+			return;
+		}
 		document.querySelector('#style').type = 'text/css';
 		let PATH_TITLE = document.querySelector('h1').innerText.replace(/^\s*index\s*of\s/i, '');
 		document.querySelector('h1').innerHTML = buildPathLink(PATH_TITLE);
@@ -159,13 +175,21 @@
 		FILE_ITEMS.forEach(item => {
 			let thumb = '';
 			let ext = item.dir ? '' : resolveExt(item.title);
-			if(item.dir){
+			if(item.parent){
+				thumb = FOLD_PARENT;
+			}else if(item.dir){
 				thumb = FOLD_SVG;
 			}else if(isImg(item.title)){
 				thumb = `<img class="thumb" loading="lazy" src="${item.link}">`;
 			}else{
 				thumb = FILE_SVG;
 			}
+
+			let mediaHtml = '';
+			if(ext === 'mp3'){
+				//mediaHtml = `<audio src="${item.link}" controls autoplay></audio>`;
+			}
+
 			listHtml += `<li
 				data-type="${item.dir ? 'dir' : 'file'}" ${item.parent ? 'data-parent' : ''}
 				${ext.length ? `data-ext="${ext}"` : ''}
@@ -175,12 +199,13 @@
 			<span class="title">${item.parent ? '上一级' : item.title}</span>
 			<span class="last-modified">${item.LastModified}</span>
 			<span class="size">${item.SizeText}</span>
+			${mediaHtml}
 		</a>
 		</li>`;
 		});
 
 		let ul = document.createElement('ul');
-		ul.setAttribute('data-mode', 'tile');
+		ul.setAttribute('data-mode', VIEW_MODE_TILE);
 		document.body.insertBefore(ul, document.querySelector('pre'));
 		ul.innerHTML = listHtml;
 	})();
