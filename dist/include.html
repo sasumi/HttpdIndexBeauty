@@ -1,41 +1,76 @@
 <style type="text/template" id="style">
 	:root{
 		--color:#333333;
-		--bg-color:#fff;
+		--bg-color:#ffffff;
 		--link-color:#185dd4;
-		--gap: 4em;
+		--gap:3em;
+		--thumb-size:40px;
+		--ext-size:12px;
 	}
 	*{margin:0; padding:0; list-style:none;}
-	html{font-size:14px; color:var(--color); background-color:#aaa; height:100vh; width:100vw;}
-	pre {display:none;}
-	hr {display:none;}
+	a{text-decoration:none; color:var(--color)}
+	html{font-size:14px; color:var(--color); background-color:#aaaaaa; height:100vh; width:100vw;}
+	pre{display:none;}
+	hr{display:none;}
 
-	h1 {background-color:#eee; border-bottom:1px solid #ddd; padding:0.5em 1em; font-weight:normal; font-size:20px; text-shadow:1px 1px 1px white; color:#555}
-	body {margin:var(--gap); background-color:#ffffff; box-shadow:1px 1px 20px #898585; box-sizing:border-box; overflow:hidden;}
+	h1{background-color:#eeeeee; border-bottom:1px solid #dddddd; padding:0.5em 1em; font-weight:normal; font-size:20px; text-shadow:1px 1px 1px white; color:gray}
+	h1 a{color:var(--color); opacity:0.75; margin:0 0.15em;}
+	h1 a:last-of-type{opacity:1}
+	h1 a:hover{color:var(--link-color); opacity:1}
+	body{margin:var(--gap); background-color:#ffffff; box-shadow:1px 1px 20px #898585; box-sizing:border-box; overflow:hidden;}
 
-	ul {max-height:calc(100vh - var(--gap) * 4 + 4em); overflow:auto;}
-	li {float:left; margin:1em;}
-	li a {width:15em; height:3em; border-radius:5px; display:block; text-decoration:none; color:#333; position:relative; padding-left:40px; border:5px solid transparent}
-	li a:hover {background-color:#eee;}
-	li .title {display:block; font-size:1.2em;}
+	ul{max-height:calc(100vh - var(--gap) * 4 + 4em); overflow:auto; --ext:""}
+	li{float:left; margin:1em; position:relative;}
+	li a{border-radius:5px; display:block; text-decoration:none; color:#333333; position:relative; border:5px solid transparent}
+	li a:hover{background-color:#eeeeee;}
+	li .title{display:block; font-size:1.1em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 	li .size,
-	li .last-modified {color:gray;}
-	li svg {position:absolute; width:32px; height:32px; left:0;}
+	li .last-modified{color:gray;}
+	li .thumb{width:var(--thumb-size); height:var(--thumb-size)}
+	li img.thumb{object-fit:contain; background-color:#ffffff;}
 
-	.type-dir .size {display:none;}
-	.parent .last-modified {display:none;}
-	.parent .title {user-select:none; color:gray;}
+	ul[data-mode="tile"] a{width:15em; height:3em; overflow:hidden; padding-left:calc(var(--thumb-size) + 0.75em); }
+	ul[data-mode="tile"] .thumb{position:absolute; left:0;}
+	ul[data-mode="tile"] .size{margin-left:1em;}
+
+	ul[data-mode="icon"]{--thumb-size:48px; padding:0.5em;}
+	ul[data-mode="icon"] li{margin:0 0.5em 0.5em 0;}
+	ul[data-mode="icon"] a{width:6em; height:calc(var(--thumb-size) + 3em); overflow:hidden}
+	ul[data-mode="icon"] .last-modified,
+	ul[data-mode="icon"] .size{display:none;}
+	ul[data-mode="icon"] .title{text-align:center;}
+	ul[data-mode="icon"] .thumb{margin:0 auto 0.5em auto; display:block;}
+	ul[data-mode="icon"] li:before{display:none;}
+
+	[data-type="dir"] .size{display:none;}
+	li[data-ext]:before{content:var(--ext); font-size:var(--ext-size); color:gray; background-color:#eeeeee; z-index:1; opacity:0.8; position:absolute; margin:calc(var(--thumb-size) - var(--ext-size)) 0 0 calc(var(--thumb-size) - var(--ext-size))}
+	[data-parent] .last-modified{display:none;}
+	[data-parent] .title{user-select:none; color:gray; margin-top:.5em;}
 </style>
 <script>
 	const ONE_G = 1024 * 1024 * 1024;
 	const ONE_M = 1024 * 1024;
 	const ONE_K = 1024;
 
-	const FOLD_SVG = '<svg t="1703145101119" class="icon" viewBox="0 0 1194 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6587" width="200" height="200"><path d="M1090.17345393 277.75145411H83.33333333V133.91715166a71.91715166 71.91715166 0 0 1 71.91715166-71.91715166h251.71002949l143.83430332 143.83430332H1018.25630228a71.91715166 71.91715166 0 0 1 71.91715165 71.91715078z" p-id="6588" fill="#8a8a8a"></path><path d="M83.33333333 349.66860576m71.91715166 0l863.00581729 0q71.91715166 0 71.91715165 71.91715166l0 431.50290821q0 71.91715166-71.91715165 71.91715166l-863.00581729 0q-71.91715166 0-71.91715166-71.91715166l0-431.50290821q0-71.91715166 71.91715166-71.91715166Z" p-id="6589" fill="#8a8a8a"></path></svg>';
-	const FILE_SVG = '<svg t="1703144775181" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6412" width="200" height="200"><path d="M257.49387688 75.70378895C197.5758639 75.70378895 148.41982411 124.85982871 148.41982411 184.7778417v654.4443166c0 59.91801299 49.15603978 109.07405276 109.07405277 109.07405275h509.01224624c59.91801299 0 109.07405276-49.15603978 109.07405277-109.07405275V315.15769278L636.12627204 75.70378895z m0 72.71603516H584.71603518v218.14810554h218.14810553v472.65422865c0 20.43320588-15.9248117 36.35801759-36.35801759 36.35801759h-509.01224624a35.92172138 35.92172138 0 0 1-36.35801759-36.35801759v-654.4443166c0-20.43320588 15.9248117-36.35801759 36.35801759-36.35801759z m399.93819347 51.41023688L751.45390383 293.85189446H657.43207035z" fill="#707070" p-id="6413"></path></svg>';
+	const FOLD_SVG = '<svg t="1703145101119" class="thumb" viewBox="0 0 1194 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6587" width="200" height="200"><path d="M1090.17345393 277.75145411H83.33333333V133.91715166a71.91715166 71.91715166 0 0 1 71.91715166-71.91715166h251.71002949l143.83430332 143.83430332H1018.25630228a71.91715166 71.91715166 0 0 1 71.91715165 71.91715078z" p-id="6588" fill="#8a8a8a"></path><path d="M83.33333333 349.66860576m71.91715166 0l863.00581729 0q71.91715166 0 71.91715165 71.91715166l0 431.50290821q0 71.91715166-71.91715165 71.91715166l-863.00581729 0q-71.91715166 0-71.91715166-71.91715166l0-431.50290821q0-71.91715166 71.91715166-71.91715166Z" p-id="6589" fill="#8a8a8a"></path></svg>';
+	const FILE_SVG = '<svg t="1703144775181" class="thumb" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6412" width="200" height="200"><path d="M257.49387688 75.70378895C197.5758639 75.70378895 148.41982411 124.85982871 148.41982411 184.7778417v654.4443166c0 59.91801299 49.15603978 109.07405276 109.07405277 109.07405275h509.01224624c59.91801299 0 109.07405276-49.15603978 109.07405277-109.07405275V315.15769278L636.12627204 75.70378895z m0 72.71603516H584.71603518v218.14810554h218.14810553v472.65422865c0 20.43320588-15.9248117 36.35801759-36.35801759 36.35801759h-509.01224624a35.92172138 35.92172138 0 0 1-36.35801759-36.35801759v-654.4443166c0-20.43320588 15.9248117-36.35801759 36.35801759-36.35801759z m399.93819347 51.41023688L751.45390383 293.85189446H657.43207035z" fill="#707070" p-id="6413"></path></svg>';
 
 	const isDir = fileAttr => {
 		return fileAttr && fileAttr.trim() === '-';
+	}
+
+	const isImg = fileName => {
+		return /\.(jpg|jpeg|webp|gif|png|svg)$/ig.test(fileName);
+	}
+
+	const dateFormat = datetime => {
+		let d = new Date(datetime);
+		return d.getFullYear()
+			+ '/' + (d.getMonth() + 1).toString().padStart(2, '0')
+			+ '/' + (d.getDate()).toString().padStart(2, '0')
+			+ ' '
+			+ (d.getHours()).toString().padStart(2, '0')
+			+ ':' + (d.getMinutes()).toString().padStart(2, '0');
 	}
 
 	const convertSize = sizeText => {
@@ -50,11 +85,34 @@
 		return num;
 	}
 
+	const resolveExt = name => {
+		let tmp = name.split('.');
+		if(tmp.length > 1){
+			return tmp[tmp.length - 1] || '';
+		}
+		return '';
+	}
 
-	(()=>{
+	const buildPathLink = (linkText) => {
+		let html = '';
+		let current_path = '';
+		let segs = linkText.split('/');
+		segs.forEach(seg => {
+			if(seg.length === 0){
+				return;
+			}
+			current_path += '/' + seg;
+			html += `/<a href="${current_path}">${seg}</a>`;
+		});
+		html += '/';
+		return html;
+	}
+
+
+	(() => {
 		document.querySelector('#style').type = 'text/css';
 		let PATH_TITLE = document.querySelector('h1').innerText.replace(/^\s*index\s*of\s/i, '');
-		document.querySelector('h1').innerText = PATH_TITLE;
+		document.querySelector('h1').innerHTML = buildPathLink(PATH_TITLE);
 
 		let FILE_ITEMS = (() => {
 			let items = [];
@@ -63,27 +121,34 @@
 				if(!line.length){
 					return;
 				}
-				let tmp, link, linkTitle, LastModified, fileAttr, size, dir, parent = false;
+				let tmp, link, title, LastModified = '', fileAttr, size, SizeText, dir, parent = false;
 				tmp = /<a\s*href="(.*)">([^<]+)<\/a>/.exec(line);
 				link = tmp[1];
-				linkTitle = tmp[2];
-				tmp = /<\/a>\s+(.*)\s{2,}(\S)+/ig.exec(line);
+				title = tmp[2];
+
+				tmp = /<\/a>\s+(\S+\s\S+)\s+(\S+)/ig.exec(line);
 				if(!tmp){
 					dir = true;
 					parent = true;
 					size = 0;
+					SizeText = '';
 				}else{
-					LastModified = tmp[1].trim();
+					LastModified = dateFormat(tmp[1].trim());
 					fileAttr = tmp[2].trim();
 					dir = isDir(fileAttr);
 					size = convertSize(fileAttr);
+					SizeText = size.toString() === fileAttr ? size + 'B' : fileAttr;
+				}
+				if(dir){
+					title = title.replace(new RegExp('\\/$', 'g'), '');
 				}
 				items.push({
 					link,
 					parent,
-					title: linkTitle,
+					title,
 					LastModified,
 					size,
+					SizeText,
 					dir
 				})
 			});
@@ -91,18 +156,31 @@
 		})();
 
 		let listHtml = '';
-		FILE_ITEMS.forEach(item=>{
-			listHtml += `<li class="type-${item.dir ? 'dir':'file'} ${item.parent ? 'parent':''}">
-		<a href="${item.link}">
-			${item.dir ? FOLD_SVG : FILE_SVG}
+		FILE_ITEMS.forEach(item => {
+			let thumb = '';
+			let ext = item.dir ? '' : resolveExt(item.title);
+			if(item.dir){
+				thumb = FOLD_SVG;
+			}else if(isImg(item.title)){
+				thumb = `<img class="thumb" loading="lazy" src="${item.link}">`;
+			}else{
+				thumb = FILE_SVG;
+			}
+			listHtml += `<li
+				data-type="${item.dir ? 'dir' : 'file'}" ${item.parent ? 'data-parent' : ''}
+				${ext.length ? `data-ext="${ext}"` : ''}
+				style="--ext:'${ext}'">
+		<a href="${item.link}" title="${item.parent ? '上一级' : item.title}">
+			${thumb}
 			<span class="title">${item.parent ? '上一级' : item.title}</span>
-			<span class="size">${item.size}</span>
 			<span class="last-modified">${item.LastModified}</span>
+			<span class="size">${item.SizeText}</span>
 		</a>
 		</li>`;
 		});
 
 		let ul = document.createElement('ul');
+		ul.setAttribute('data-mode', 'tile');
 		document.body.insertBefore(ul, document.querySelector('pre'));
 		ul.innerHTML = listHtml;
 	})();
