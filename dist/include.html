@@ -10,45 +10,71 @@
 	*{margin:0; padding:0; list-style:none;}
 	a{text-decoration:none; color:var(--color)}
 	html{font-size:14px; color:var(--color); background-color:#aaaaaa; height:100vh; width:100vw;}
-	pre{display:none;}
-	hr{display:none;}
 
-	h1{background-color:#eeeeee; border-bottom:1px solid #dddddd; padding:0.5em 1em; font-weight:normal; font-size:20px; text-shadow:1px 1px 1px white; color:gray}
-	h1 a{color:var(--color); opacity:0.75; margin:0 0.15em;}
-	h1 a:last-of-type{opacity:1}
-	h1 a:hover{color:var(--link-color); opacity:1}
+	.top-bar{background-color:#eeeeee; border-bottom:1px solid #dddddd; padding:0.5em 1em;}
+
+	.paths{ font-size:16px; text-shadow:1px 1px 1px white; color:gray}
+	.paths a{color:var(--color); opacity:0.75; margin:0 0.15em;}
+	.paths a:last-of-type{opacity:1}
+	.paths a:hover{color:var(--link-color); opacity:1}
+	.paths .icon{width:1.2em; height:1.2em;}
+	.paths>* {display:inline-block; vertical-align:middle}
+
 	body{margin:var(--gap); background-color:#ffffff; box-shadow:1px 1px 20px #898585; box-sizing:border-box; overflow:hidden;}
 
-	ul{max-height:calc(100vh - var(--gap) * 4 + 2em); overflow:auto; --ext:""; padding:0.5em;}
-	li{float:left; position:relative;}
-	li a{border-radius:5px; display:block; text-decoration:none; color:#333333; position:relative; border:5px solid transparent}
-	li a:hover{background-color:#eeeeee;}
-	li .title{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-	li .size,
-	li .last-modified{color:gray;}
-	li .thumb{width:var(--thumb-size); height:var(--thumb-size)}
-	li img.thumb{object-fit:contain; background-color:#ffffff;}
+	.file-list{max-height:calc(100vh - var(--gap) * 4 + 2em); overflow:auto; --ext:""; padding:0.5em;}
+	.file-list li{position:relative;}
+	.file-list li a{border-radius:5px; display:block; text-decoration:none; color:#333333; position:relative; border:5px solid transparent}
+	.file-list li a:hover{background-color:#eeeeee;}
+	.file-list li .title{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+	.file-list li .size, .file-list li .last-modified{color:#bbb; zoom:0.9}
+	.file-list li .thumb{width:var(--thumb-size); height:var(--thumb-size)}
+	.file-list li img.thumb{object-fit:contain; background-color:#ffffff;}
 
-	ul[data-mode="tile"] li{margin:.25em;}
-	ul[data-mode="tile"] a{width:15em; height:3em; overflow:hidden; padding-left:calc(var(--thumb-size) + 0.75em); }
-	ul[data-mode="tile"] .thumb{position:absolute; left:0;}
-	ul[data-mode="tile"] .size{margin-left:1em;}
+	.file-list[data-mode="tile"] li{margin:.25em; float:left;}
+	.file-list[data-mode="tile"] a{width:15em; height:3em; overflow:hidden; padding-left:calc(var(--thumb-size) + 0.75em); }
+	.file-list[data-mode="tile"] .thumb{position:absolute; left:0;}
+	.file-list[data-mode="tile"] .size{margin-left:1em;}
 
-	ul[data-mode="icon"]{--thumb-size:48px; padding:0.5em;}
-	ul[data-mode="icon"] li{margin:0.25em}
-	ul[data-mode="icon"] a{width:6em; height:calc(var(--thumb-size) + 3em); overflow:hidden}
-	ul[data-mode="icon"] .last-modified,
-	ul[data-mode="icon"] .size{display:none;}
-	ul[data-mode="icon"] .title{text-align:center;}
-	ul[data-mode="icon"] .thumb{margin:0 auto 0.5em auto; display:block;}
-	ul[data-mode="icon"] li:before{display:none;}
+	.file-list[data-mode="icon"]{--thumb-size:48px; padding:0.5em;}
+	.file-list[data-mode="icon"] li{margin:0.25em; float:left;}
+	.file-list[data-mode="icon"] a{width:6em; height:calc(var(--thumb-size) + 3em); overflow:hidden}
+	.file-list[data-mode="icon"] .last-modified,
+	.file-list[data-mode="icon"] .size{display:none;}
+	.file-list[data-mode="icon"] .title{text-align:center;}
+	.file-list[data-mode="icon"] .thumb{margin:0 auto 0.5em auto; display:block;}
+	.file-list[data-mode="icon"] li:before{display:none;}
 
-	li audio {position:absolute; z-index:2;}
+	.file-list[data-mode="list"]{--thumb-size:24px; padding:0.5em;}
+	.file-list[data-mode="list"] li{margin:0; border-bottom:1px solid #eeeeee}
+	.file-list[data-mode="list"] li:last-child{border-bottom:none;}
+	.file-list[data-mode="list"] a{padding:0.5em 0.25em; border-radius:0;}
+	.file-list[data-mode="list"] li[data-parent] .title{margin-top:0;}
+	.file-list[data-mode="list"] .last-modified,
+	.file-list[data-mode="list"] .size{display:inline-block; vertical-align:middle; float:right;}
+	.file-list[data-mode="list"] .size{text-align:right; margin-right:5em;}
+	.file-list[data-mode="list"] .title{display:inline-block; vertical-align:middle;}
+	.file-list[data-mode="list"] .thumb{float:left; margin-right:0.5em;}
+	.file-list[data-mode="list"] li:before{display:none;}
 
-	[data-type="dir"] .size{display:none;}
-	li[data-ext]:before{content:var(--ext); font-size:var(--ext-size); color:gray; background-color:#eeeeee; z-index:1; opacity:0.8; position:absolute; margin:calc(var(--thumb-size) - var(--ext-size)) 0 0 calc(var(--thumb-size) - var(--ext-size))}
-	[data-parent] .last-modified{display:none;}
-	[data-parent] .title{user-select:none; color:gray; margin-top:.5em;}
+	.file-list li audio{position:absolute; z-index:2;}
+
+	.file-list [data-type="dir"] .size{display:none;}
+	.file-list li[data-ext]:before{content:var(--ext); font-size:var(--ext-size); color:gray; background-color:#eeeeee; z-index:1; opacity:0.8; position:absolute; margin:calc(var(--thumb-size) - var(--ext-size)) 0 0 calc(var(--thumb-size) - var(--ext-size))}
+	.file-list [data-parent] .last-modified{display:none;}
+	.file-list [data-parent] .title{user-select:none; color:gray; margin-top:.5em;}
+
+	.options {position:relative; float:right; margin:-1.5em -0.5em 0 0;}
+	.options dt {border:1px solid transparent; border-radius:3px;}
+	.options dt .icon {width:25px; height:25px; cursor:pointer;}
+	.options dd {display:none; position:absolute; z-index:2; border-radius:5px; background-color:#fff; padding:3px 0; width:12em; right:0; box-shadow:1px 1px 5px #ccc;}
+	.options:hover dd {display:block;}
+	.options:hover dt {background-color:#ffffff; border-color:#ccc;}
+
+	.menu .cap {font-size:12px; padding:0.5em 1em; color:#bbb; user-select:none;}
+	.menu .sep:before {content:""; display:block; border-bottom:1px solid #ddd; margin:0 .5em}
+	.menu span {display:block; padding:0.5em 1em; cursor:pointer;}
+	.menu span:hover {background-color:#eee;}
 </style>
 <script>
 	const ONE_G = 1024 * 1024 * 1024;
@@ -57,7 +83,9 @@
 
 	const VIEW_MODE_ICON = 'icon';
 	const VIEW_MODE_TILE = 'tile';
+	const VIEW_MODE_LIST = 'list';
 
+	const HOME_ICON = '<svg t="1703210335547" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16796" width="200" height="200"><path d="M946.5 505L560.1 118.8l-25.9-25.9c-12.3-12.2-32.1-12.2-44.4 0L77.5 505c-12.3 12.3-18.9 28.6-18.8 46 0.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8 12.1-12.1 18.7-28.2 18.7-45.3 0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204z m217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z" p-id="16797" fill="#707070"></path></svg>';
 	const FOLD_SVG = '<svg t="1703145101119" class="thumb" viewBox="0 0 1194 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6587" width="200" height="200"><path d="M1090.17345393 277.75145411H83.33333333V133.91715166a71.91715166 71.91715166 0 0 1 71.91715166-71.91715166h251.71002949l143.83430332 143.83430332H1018.25630228a71.91715166 71.91715166 0 0 1 71.91715165 71.91715078z" p-id="6588" fill="#8a8a8a"></path><path d="M83.33333333 349.66860576m71.91715166 0l863.00581729 0q71.91715166 0 71.91715165 71.91715166l0 431.50290821q0 71.91715166-71.91715165 71.91715166l-863.00581729 0q-71.91715166 0-71.91715166-71.91715166l0-431.50290821q0-71.91715166 71.91715166-71.91715166Z" p-id="6589" fill="#8a8a8a"></path></svg>';
 	const FILE_SVG = '<svg t="1703144775181" class="thumb" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6412" width="200" height="200"><path d="M257.49387688 75.70378895C197.5758639 75.70378895 148.41982411 124.85982871 148.41982411 184.7778417v654.4443166c0 59.91801299 49.15603978 109.07405276 109.07405277 109.07405275h509.01224624c59.91801299 0 109.07405276-49.15603978 109.07405277-109.07405275V315.15769278L636.12627204 75.70378895z m0 72.71603516H584.71603518v218.14810554h218.14810553v472.65422865c0 20.43320588-15.9248117 36.35801759-36.35801759 36.35801759h-509.01224624a35.92172138 35.92172138 0 0 1-36.35801759-36.35801759v-654.4443166c0-20.43320588 15.9248117-36.35801759 36.35801759-36.35801759z m399.93819347 51.41023688L751.45390383 293.85189446H657.43207035z" fill="#707070" p-id="6413"></path></svg>';
 	const FOLD_PARENT = '<svg t="1703168274004" class="thumb" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8086" width="200" height="200"><path d="M0 0h1024v1024H0V0z" fill="#8a8a8a" opacity=".01" p-id="8087"></path><path d="M463.735467 122.402133a68.266667 68.266667 0 0 1 96.529066 0l307.2 307.2a68.266667 68.266667 0 1 1-96.529066 96.529067L580.266667 335.4624V853.333333a68.266667 68.266667 0 1 1-136.533334 0V335.4624l-190.6688 190.6688a68.266667 68.266667 0 1 1-96.529066-96.529067l307.2-307.2z" fill="#8a8a8a" p-id="8088"></path></svg>';
@@ -65,15 +93,20 @@
 		return fileAttr && fileAttr.trim() === '-';
 	}
 
+	const q = (selector)=>{
+		return document.querySelector(selector);
+	}
+
+	const qs = selector=>{
+		return document.querySelectorAll(selector);
+	}
+
 	const isImg = fileName => {
 		return /\.(jpg|jpeg|webp|gif|png|svg)$/ig.test(fileName);
 	}
 
-	const isIndex = ()=>{
-		return document.title.indexOf('Index of') === 0
-			&& document.querySelector('h1')
-			&& document.querySelector('pre')
-			&& document.querySelector('hr');
+	const isIndex = () => {
+		return document.title.indexOf('Index of') === 0 && q('h1') && q('pre') && q('hr');
 	}
 
 	const dateFormat = datetime => {
@@ -107,7 +140,9 @@
 	}
 
 	const buildPathLink = (linkText) => {
-		let html = '';
+		let html = [
+			`<a href="/" class="home-link">${HOME_ICON}</a>`
+		];
 		let current_path = '';
 		let segs = linkText.split('/');
 		segs.forEach(seg => {
@@ -115,24 +150,62 @@
 				return;
 			}
 			current_path += '/' + seg;
-			html += `/<a href="${current_path}">${seg}</a>`;
+			html.push(`<a href="${current_path}">${seg}</a>`);
 		});
-		html += '/';
-		return html;
+		return html.join('<span class="sep">&gt;</span>');
 	}
 
+	const rm = n=>{
+		console.log(n);
+		return n.parentNode.removeChild(n);
+	}
+
+	const createNode = (html, parentNode) => {
+		let tpl = document.createElement('template');
+		html = html.trim();
+		tpl.innerHTML = html;
+		let nodes = [];
+		if(parentNode){
+			tpl.content.childNodes.forEach(node => {
+				nodes.push(parentNode.appendChild(node));
+			})
+		}else{
+			nodes = tpl.content.childNodes;
+		}
+		return nodes.length === 1 ? nodes[0] : nodes;
+	}
 
 	(() => {
 		if(!isIndex()){
 			return;
 		}
-		document.querySelector('#style').type = 'text/css';
-		let PATH_TITLE = document.querySelector('h1').innerText.replace(/^\s*index\s*of\s/i, '');
-		document.querySelector('h1').innerHTML = buildPathLink(PATH_TITLE);
+		q('#style').type = 'text/css';
+		let h1 = q('h1');
+		let pre = q('pre');
+
+		let PATH_TITLE = h1.innerText.replace(/^\s*index\s*of\s/i, '');
+		document.body.insertBefore(createNode(
+			`<div class="top-bar">
+				<div class="paths">${buildPathLink(PATH_TITLE)}</div>
+				<dl class="options">
+					<dt><svg t="1703220295630" class="icon" viewBox="0 0 1534 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="23713" width="200" height="200"><path d="M1162.2 480H695.4c-0.8-2.4-1.8-4.6-2.8-6.8-1-2.2-2.2-4.4-3.4-6.6-1.2-2.2-2.4-4.2-3.8-6.4-1.4-2-2.8-4-4.4-6-1.6-2-3.2-3.8-4.8-5.8-1.6-1.8-3.4-3.6-5.2-5.4-1.8-1.8-3.8-3.4-5.6-5-2-1.6-4-3-6-4.4-2-1.4-4.2-2.8-6.4-4l-6.6-3.6c-2.2-1-4.6-2.2-7-3-2.4-1-4.8-1.8-7.2-2.6-2.4-0.8-4.8-1.4-7.4-2-2.4-0.6-5-1-7.4-1.4-2.6-0.4-5-0.6-7.6-0.8s-5-0.2-7.6-0.2-5 0-7.6 0.2c-2.6 0.2-5 0.4-7.6 0.8-2.6 0.4-5 0.8-7.4 1.4-2.4 0.6-5 1.2-7.4 2-2.4 0.8-4.8 1.6-7.2 2.6-2.4 1-4.6 2-7 3-2.2 1-4.4 2.2-6.6 3.6-2.2 1.2-4.2 2.6-6.4 4-2 1.4-4 3-6 4.4-2 1.6-3.8 3.2-5.6 5-1.8 1.8-3.6 3.4-5.2 5.4-1.6 1.8-3.2 3.8-4.8 5.8-1.6 2-3 4-4.4 6-1.4 2-2.6 4.2-3.8 6.4-1.2 2.2-2.4 4.4-3.4 6.6-1 2.2-2 4.6-2.8 6.8H371.8c-1 0-2.2 0-3.2 0.2s-2.2 0.2-3.2 0.4-2.2 0.4-3.2 0.8-2 0.6-3 1-2 0.8-3 1.4c-1 0.4-1.8 1-2.8 1.6-0.8 0.6-1.8 1.2-2.6 1.8-0.8 0.6-1.6 1.4-2.4 2.2-0.8 0.8-1.4 1.6-2.2 2.4-0.6 0.8-1.4 1.6-2 2.6-0.6 0.8-1.2 1.8-1.6 2.6-0.6 1-1 1.8-1.4 2.8-0.4 1-0.8 2-1 3-0.4 1-0.6 2-0.8 3-0.2 1-0.4 2-0.4 3.2-0.2 1-0.2 2-0.2 3.2s0 2 0.2 3.2c0.2 1 0.2 2 0.4 3.2s0.4 2 0.8 3 0.6 2 1 3 0.8 2 1.4 2.8c0.6 1 1 1.8 1.6 2.6 0.6 0.8 1.2 1.8 2 2.6 0.6 0.8 1.4 1.6 2.2 2.4 0.8 0.8 1.6 1.4 2.4 2.2 0.8 0.6 1.6 1.2 2.6 1.8 0.8 0.6 1.8 1.2 2.8 1.6 1 0.4 2 1 3 1.4 1 0.4 2 0.8 3 1 1 0.4 2 0.6 3.2 0.8 1 0.2 2.2 0.4 3.2 0.4 1 0.2 2.2 0.2 3.2 0.2h137.4c0.8 2.4 1.8 4.6 2.8 6.8 1 2.2 2.2 4.4 3.4 6.6 1.2 2.2 2.4 4.2 3.8 6.4 1.4 2 2.8 4 4.4 6 1.6 2 3.2 3.8 4.8 5.8 1.6 1.8 3.4 3.6 5.2 5.4 1.8 1.8 3.8 3.4 5.6 5 2 1.6 4 3 6 4.4 2 1.4 4.2 2.8 6.4 4l6.6 3.6c2.2 1 4.6 2.2 7 3 2.4 1 4.8 1.8 7.2 2.6 2.4 0.8 4.8 1.4 7.4 2 2.4 0.6 5 1 7.4 1.4 2.6 0.4 5 0.6 7.6 0.8 2.6 0.2 5 0.2 7.6 0.2s5 0 7.6-0.2c2.6-0.2 5-0.4 7.6-0.8 2.6-0.4 5-0.8 7.4-1.4 2.4-0.6 5-1.2 7.4-2 2.4-0.8 4.8-1.6 7.2-2.6 2.4-1 4.6-2 7-3 2.2-1 4.4-2.2 6.6-3.6 2.2-1.2 4.2-2.6 6.4-4 2-1.4 4-3 6-4.4 2-1.6 3.8-3.2 5.6-5 1.8-1.8 3.6-3.4 5.2-5.4 1.6-1.8 3.2-3.8 4.8-5.8 1.6-2 3-4 4.4-6 1.4-2 2.6-4.2 3.8-6.4 1.2-2.2 2.4-4.4 3.4-6.6 1-2.2 2-4.6 2.8-6.8h466.8c1 0 2.2 0 3.2-0.2s2.2-0.2 3.2-0.4 2.2-0.4 3.2-0.8 2-0.6 3-1 2-0.8 3-1.4c1-0.4 1.8-1 2.8-1.6 0.8-0.6 1.8-1.2 2.6-1.8 0.8-0.6 1.6-1.4 2.4-2.2 0.8-0.8 1.4-1.6 2.2-2.4 0.6-0.8 1.4-1.6 2-2.6 0.6-0.8 1.2-1.8 1.6-2.6 0.6-1 1-1.8 1.4-2.8 0.4-1 0.8-2 1-3 0.4-1 0.6-2 0.8-3 0.2-1 0.4-2 0.4-3.2 0.2-1 0.2-2 0.2-3.2 0-1 0-2-0.2-3.2s-0.2-2-0.4-3.2c-0.2-1-0.4-2-0.8-3s-0.6-2-1-3-0.8-2-1.4-2.8c-0.6-1-1-1.8-1.6-2.6-0.6-0.8-1.2-1.8-2-2.6-0.6-0.8-1.4-1.6-2.2-2.4-0.8-0.8-1.6-1.4-2.4-2.2-0.8-0.6-1.6-1.2-2.6-1.8-0.8-0.6-1.8-1.2-2.8-1.6-1-0.4-2-1-3-1.4-1-0.4-2-0.8-3-1-1-0.4-2-0.6-3.2-0.8-1-0.2-2.2-0.4-3.2-0.4-1.2-0.2-2.4-0.2-3.4-0.2z m0 256h-137.4c-0.8-2.4-1.8-4.6-2.8-6.8-1-2.2-2.2-4.4-3.4-6.6-1.2-2.2-2.4-4.2-3.8-6.4-1.4-2-2.8-4-4.4-6s-3.2-3.8-4.8-5.8c-1.6-1.8-3.4-3.6-5.2-5.4-1.8-1.8-3.8-3.4-5.6-5-2-1.6-4-3-6-4.4-2-1.4-4.2-2.8-6.4-4l-6.6-3.6c-2.2-1-4.6-2.2-7-3-2.4-1-4.8-1.8-7.2-2.6-2.4-0.8-4.8-1.4-7.4-2-2.4-0.6-5-1-7.4-1.4-2.6-0.4-5-0.6-7.6-0.8-2.6-0.2-5-0.2-7.6-0.2-2.6 0-5 0-7.6 0.2-2.6 0.2-5 0.4-7.6 0.8-2.6 0.4-5 0.8-7.4 1.4s-5 1.2-7.4 2c-2.4 0.8-4.8 1.6-7.2 2.6-2.4 1-4.6 2-7 3-2.2 1-4.4 2.2-6.6 3.6-2.2 1.2-4.2 2.6-6.4 4-2 1.4-4 3-6 4.4-2 1.6-3.8 3.2-5.6 5-1.8 1.8-3.6 3.4-5.2 5.4-1.6 1.8-3.2 3.8-4.8 5.8s-3 4-4.4 6c-1.4 2-2.6 4.2-3.8 6.4-1.2 2.2-2.4 4.4-3.4 6.6-1 2.2-2 4.6-2.8 6.8H371.8c-1 0-2.2 0-3.2 0.2s-2.2 0.2-3.2 0.4-2.2 0.4-3.2 0.8-2 0.6-3 1-2 0.8-3 1.4c-1 0.4-1.8 1-2.8 1.6-0.8 0.6-1.8 1.2-2.6 1.8-0.8 0.6-1.6 1.4-2.4 2.2-0.8 0.8-1.4 1.6-2.2 2.4-0.6 0.8-1.4 1.6-2 2.6-0.6 0.8-1.2 1.8-1.6 2.6-0.6 1-1 1.8-1.4 2.8-0.4 1-0.8 2-1 3-0.4 1-0.6 2-0.8 3s-0.4 2-0.4 3.2c-0.2 1-0.2 2-0.2 3.2s0 2 0.2 3.2c0.2 1 0.2 2 0.4 3.2s0.4 2 0.8 3 0.6 2 1 3 0.8 2 1.4 2.8c0.6 1 1 1.8 1.6 2.6 0.6 0.8 1.2 1.8 2 2.6 0.6 0.8 1.4 1.6 2.2 2.4 0.8 0.8 1.6 1.4 2.4 2.2 0.8 0.6 1.6 1.2 2.6 1.8 0.8 0.6 1.8 1.2 2.8 1.6 1 0.4 2 1 3 1.4 1 0.4 2 0.8 3 1 1 0.4 2 0.6 3.2 0.8 1 0.2 2.2 0.4 3.2 0.4 1 0.2 2.2 0.2 3.2 0.2h466.8c0.8 2.4 1.8 4.6 2.8 6.8 1 2.2 2.2 4.4 3.4 6.6 1.2 2.2 2.4 4.2 3.8 6.4 1.4 2 2.8 4 4.4 6 1.6 2 3.2 3.8 4.8 5.8 1.6 1.8 3.4 3.6 5.2 5.4 1.8 1.8 3.8 3.4 5.6 5 2 1.6 4 3 6 4.4 2 1.4 4.2 2.8 6.4 4l6.6 3.6c2.2 1 4.6 2.2 7 3 2.4 1 4.8 1.8 7.2 2.6 2.4 0.8 4.8 1.4 7.4 2 2.4 0.6 5 1 7.4 1.4 2.6 0.4 5 0.6 7.6 0.8 2.6 0.2 5 0.2 7.6 0.2 2.6 0 5 0 7.6-0.2 2.6-0.2 5-0.4 7.6-0.8 2.6-0.4 5-0.8 7.4-1.4 2.4-0.6 5-1.2 7.4-2 2.4-0.8 4.8-1.6 7.2-2.6 2.4-1 4.6-2 7-3s4.4-2.2 6.6-3.6c2.2-1.2 4.2-2.6 6.4-4 2-1.4 4-3 6-4.4 2-1.6 3.8-3.2 5.6-5 1.8-1.8 3.6-3.4 5.2-5.4 1.6-1.8 3.2-3.8 4.8-5.8 1.6-2 3-4 4.4-6 1.4-2 2.6-4.2 3.8-6.4 1.2-2.2 2.4-4.4 3.4-6.6 1-2.2 2-4.6 2.8-6.8h137.4c1 0 2.2 0 3.2-0.2s2.2-0.2 3.2-0.4 2.2-0.4 3.2-0.8 2-0.6 3-1 2-0.8 3-1.4c1-0.4 1.8-1 2.8-1.6 0.8-0.6 1.8-1.2 2.6-1.8 0.8-0.6 1.6-1.4 2.4-2.2 0.8-0.8 1.4-1.6 2.2-2.4 0.6-0.8 1.4-1.6 2-2.6 0.6-0.8 1.2-1.8 1.6-2.6 0.6-1 1-1.8 1.4-2.8 0.4-1 0.8-2 1-3 0.4-1 0.6-2 0.8-3 0.2-1 0.4-2 0.4-3.2 0.2-1 0.2-2 0.2-3.2 0-1 0-2-0.2-3.2-0.2-1-0.2-2-0.4-3.2-0.2-1-0.4-2-0.8-3s-0.6-2-1-3-0.8-2-1.4-2.8c-0.6-1-1-1.8-1.6-2.6-0.6-0.8-1.2-1.8-2-2.6-0.6-0.8-1.4-1.6-2.2-2.4-0.8-0.8-1.6-1.4-2.4-2.2-0.8-0.6-1.6-1.2-2.6-1.8-0.8-0.6-1.8-1.2-2.8-1.6-1-0.4-2-1-3-1.4-1-0.4-2-0.8-3-1-1-0.4-2-0.6-3.2-0.8-1-0.2-2.2-0.4-3.2-0.4-1.2-0.2-2.4-0.2-3.4-0.2zM371.8 288h466.8c0.8 2.4 1.8 4.6 2.8 6.8 1 2.2 2.2 4.4 3.4 6.6 1.2 2.2 2.4 4.2 3.8 6.4 1.4 2 2.8 4 4.4 6 1.6 2 3.2 3.8 4.8 5.8 1.6 1.8 3.4 3.6 5.2 5.4 1.8 1.8 3.8 3.4 5.6 5 2 1.6 4 3 6 4.4 2 1.4 4.2 2.8 6.4 4l6.6 3.6c2.2 1 4.6 2.2 7 3 2.4 1 4.8 1.8 7.2 2.6 2.4 0.8 4.8 1.4 7.4 2 2.4 0.6 5 1 7.4 1.4 2.6 0.4 5 0.6 7.6 0.8 2.6 0.2 5 0.2 7.6 0.2 2.6 0 5 0 7.6-0.2 2.6-0.2 5-0.4 7.6-0.8 2.6-0.4 5-0.8 7.4-1.4 2.4-0.6 5-1.2 7.4-2 2.4-0.8 4.8-1.6 7.2-2.6 2.4-1 4.6-2 7-3s4.4-2.2 6.6-3.6c2.2-1.2 4.2-2.6 6.4-4 2-1.4 4-3 6-4.4 2-1.6 3.8-3.2 5.6-5 1.8-1.8 3.6-3.4 5.2-5.4 1.6-1.8 3.2-3.8 4.8-5.8 1.6-2 3-4 4.4-6 1.4-2 2.6-4.2 3.8-6.4 1.2-2.2 2.4-4.4 3.4-6.6 1-2.2 2-4.6 2.8-6.8h137.4c1 0 2.2 0 3.2-0.2s2.2-0.2 3.2-0.4 2.2-0.4 3.2-0.8 2-0.6 3-1 2-0.8 3-1.4c1-0.4 1.8-1 2.8-1.6 0.8-0.6 1.8-1.2 2.6-1.8 0.8-0.6 1.6-1.4 2.4-2.2 0.8-0.8 1.4-1.6 2.2-2.4 0.6-0.8 1.4-1.6 2-2.6 0.6-0.8 1.2-1.8 1.6-2.6 0.6-1 1-1.8 1.4-2.8 0.4-1 0.8-2 1-3 0.4-1 0.6-2 0.8-3 0.2-1 0.4-2 0.4-3.2s0.2-2 0.2-3.2c0-1 0-2-0.2-3.2-0.2-1-0.2-2-0.4-3.2-0.2-1-0.4-2-0.8-3s-0.6-2-1-3-0.8-2-1.4-2.8c-0.6-1-1-1.8-1.6-2.6-0.6-0.8-1.2-1.8-2-2.6-0.6-0.8-1.4-1.6-2.2-2.4-0.8-0.8-1.6-1.4-2.4-2.2-0.8-0.6-1.6-1.2-2.6-1.8-0.8-0.6-1.8-1.2-2.8-1.6-1-0.4-2-1-3-1.4-1-0.4-2-0.8-3-1-1-0.4-2-0.6-3.2-0.8-1-0.2-2.2-0.4-3.2-0.4-1-0.2-2.2-0.2-3.2-0.2h-137.4c-0.8-2.4-1.8-4.6-2.8-6.8-1-2.2-2.2-4.4-3.4-6.6-1.2-2.2-2.4-4.2-3.8-6.4-1.4-2-2.8-4-4.4-6s-3.2-3.8-4.8-5.8c-1.6-1.8-3.4-3.6-5.2-5.4-1.8-1.8-3.8-3.4-5.6-5-2-1.6-4-3-6-4.4-2-1.4-4.2-2.8-6.4-4l-6.6-3.6c-2.2-1.2-4.6-2.2-7-3-2.4-1-4.8-1.8-7.2-2.6-2.4-0.8-4.8-1.4-7.4-2-2.4-0.6-5-1-7.4-1.4-2.6-0.4-5-0.6-7.6-0.8-2.6-0.2-5-0.2-7.6-0.2-2.6 0-5 0-7.6 0.2-2.6 0.2-5 0.4-7.6 0.8-2.6 0.4-5 0.8-7.4 1.4-2.4 0.6-5 1.2-7.4 2-2.4 0.8-4.8 1.6-7.2 2.6s-4.6 2-7 3c-2.2 1-4.4 2.2-6.6 3.6-2.2 1.2-4.2 2.6-6.4 4-2 1.4-4 3-6 4.4-2 1.6-3.8 3.2-5.6 5-1.8 1.8-3.6 3.4-5.2 5.4-1.6 1.8-3.2 3.8-4.8 5.8s-3 4-4.4 6c-1.4 2-2.6 4.2-3.8 6.4-1.2 2.2-2.4 4.4-3.4 6.6-1 2.2-2 4.6-2.8 6.8H371.8c-1 0-2.2 0-3.2 0.2s-2.2 0.2-3.2 0.4-2.2 0.4-3.2 0.8-2 0.6-3 1-2 0.8-3 1.4c-1 0.4-1.8 1-2.8 1.6s-1.8 1.2-2.6 1.8c-0.8 0.6-1.6 1.4-2.4 2.2-0.8 0.8-1.4 1.6-2.2 2.4-0.6 0.8-1.4 1.6-2 2.6-0.6 0.8-1.2 1.8-1.6 2.6-0.6 1-1 1.8-1.4 2.8-0.4 1-0.8 2-1 3-0.4 1-0.6 2-0.8 3s-0.4 2-0.4 3.2c-0.2 1-0.2 2-0.2 3.2 0 1 0 2 0.2 3.2 0.2 1 0.2 2 0.4 3.2s0.4 2 0.8 3 0.6 2 1 3 0.8 2 1.4 2.8c0.6 1 1 1.8 1.6 2.6 0.6 0.8 1.2 1.8 2 2.6 0.6 0.8 1.4 1.6 2.2 2.4 0.8 0.8 1.6 1.4 2.4 2.2 0.8 0.6 1.6 1.2 2.6 1.8 0.8 0.6 1.8 1.2 2.8 1.6 1 0.4 2 1 3 1.4 1 0.4 2 0.8 3 1 1 0.4 2 0.6 3.2 0.8 1 0.2 2.2 0.4 3.2 0.4 1 0.2 2.2 0.2 3.2 0.2z" p-id="23714" fill="#8a8a8a"></path></svg></dt>
+					<dd>
+						<ul class="menu">
+							<li class="cap">View Mode</li>
+							<li><span>Tile</span></li>
+							<li><span>Icon</span></li>
+							<li><span>List</span></li>
+							<li class="sep"></li>
+							<li><span>Turn Off</span></li>
+						</ul>
+					</dd>
+				</dl>
+			</div>`), h1);
+		rm(h1);
 
 		let FILE_ITEMS = (() => {
 			let items = [];
-			document.querySelector('pre').innerHTML.split("\n").forEach(line => {
+			pre.innerHTML.split("\n").forEach(line => {
 				line = line.trim();
 				if(!line.length){
 					return;
@@ -184,12 +257,6 @@
 			}else{
 				thumb = FILE_SVG;
 			}
-
-			let mediaHtml = '';
-			if(ext === 'mp3'){
-				//mediaHtml = `<audio src="${item.link}" controls autoplay></audio>`;
-			}
-
 			listHtml += `<li
 				data-type="${item.dir ? 'dir' : 'file'}" ${item.parent ? 'data-parent' : ''}
 				${ext.length ? `data-ext="${ext}"` : ''}
@@ -199,14 +266,14 @@
 			<span class="title">${item.parent ? '上一级' : item.title}</span>
 			<span class="last-modified">${item.LastModified}</span>
 			<span class="size">${item.SizeText}</span>
-			${mediaHtml}
 		</a>
 		</li>`;
 		});
 
-		let ul = document.createElement('ul');
-		ul.setAttribute('data-mode', VIEW_MODE_TILE);
-		document.body.insertBefore(ul, document.querySelector('pre'));
-		ul.innerHTML = listHtml;
+		document.body.insertBefore(createNode(`<ul class="file-list" data-mode="${VIEW_MODE_TILE}">${listHtml}</ul>`),pre);
+		rm(pre);
+		qs('hr').forEach(hr=>{
+			rm(hr);
+		});
 	})();
 </script>
