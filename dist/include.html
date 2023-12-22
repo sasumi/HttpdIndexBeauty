@@ -75,6 +75,10 @@
 	.menu .sep:before {content:""; display:block; border-bottom:1px solid #ddd; margin:0 .5em}
 	.menu span {display:block; padding:0.5em 1em; cursor:pointer;}
 	.menu span:hover {background-color:#eee;}
+
+	.kw-search-frm {position:fixed; --srch-width:40em; max-width:80vw; top:0.5em; width:var(--srch-width); margin:0 calc(50vw - var(--srch-width) / 2); background-color:#ffffff7a; padding:0.5em; box-sizing:border-box; box-shadow:1px 1px 50px #ababab;}
+	.kw-search-frm input[type=search] {display:block; width:100%; box-sizing:border-box; padding:0.5em; font-size:1.1rem; border:none;}
+	.kw-search-frm input[type=search]:focus {outline:none;}
 </style>
 <script>
 	const ONE_G = 1024 * 1024 * 1024;
@@ -117,6 +121,14 @@
 			+ ' '
 			+ (d.getHours()).toString().padStart(2, '0')
 			+ ':' + (d.getMinutes()).toString().padStart(2, '0');
+	}
+
+	const keyVisible = code => {
+		return (code >= 48 && code <= 57) //num
+			|| (code >= 65 && code <= 90) //a-z
+			|| code >= 96 && code <= 105 //numpad
+			|| (code >= 186 && code <= 222) //symbol
+			|| code === 111 // /
 	}
 
 	const convertSize = sizeText => {
@@ -175,10 +187,36 @@
 		return nodes.length === 1 ? nodes[0] : nodes;
 	}
 
+	const nodeHighlight = (node, pattern, hlClass) => {
+		let skip = 0;
+		if(node.nodeType === 3){
+			pattern = new RegExp(pattern, 'i');
+			let pos = node.data.search(pattern);
+			if(pos >= 0 && node.data.length > 0){ // .* matching "" causes infinite loop
+				let match = node.data.match(pattern); // get the match(es), but we would only handle the 1st one, hence /g is not recommended
+				let spanNode = document.createElement('span');
+				spanNode.className = hlClass; // set css
+				let middleBit = node.splitText(pos); // split to 2 nodes, node contains the pre-pos text, middleBit has the post-pos
+				let endBit = middleBit.splitText(match[0].length); // similarly split middleBit to 2 nodes
+				let middleClone = middleBit.cloneNode(true);
+				spanNode.appendChild(middleClone);
+				// parentNode ie. node, now has 3 nodes by 2 splitText()s, replace the middle with the highlighted spanNode:
+				middleBit.parentNode.replaceChild(spanNode, middleBit);
+				skip = 1; // skip this middleBit, but still need to check endBit
+			}
+		}else if(node.nodeType === 1 && node.childNodes && !/(script|style)/i.test(node.tagName)){
+			for(let i = 0; i < node.childNodes.length; ++i){
+				i += nodeHighlight(node.childNodes[i], pattern, hlClass);
+			}
+		}
+		return skip;
+	}
+
 	(() => {
 		if(!isIndex()){
 			return;
 		}
+
 		q('#style').type = 'text/css';
 		let h1 = q('h1');
 		let pre = q('pre');
@@ -270,10 +308,46 @@
 		</li>`;
 		});
 
-		document.body.insertBefore(createNode(`<ul class="file-list" data-mode="${VIEW_MODE_TILE}">${listHtml}</ul>`),pre);
+		let ListNode = createNode(`<ul class="file-list" data-mode="${VIEW_MODE_TILE}">${listHtml}</ul>`);
+		document.body.insertBefore(ListNode,pre);
 		rm(pre);
 		qs('hr').forEach(hr=>{
 			rm(hr);
+		});
+
+		const searchForm = createNode(`<div class="kw-search-frm" style="display:none;"><input type="search" placeholder="search current page..."></div>`, document.body);
+		const searchInput = searchForm.querySelector('input[type=search]');
+
+		const searchText = kw=>{
+			console.log('searching kw:',kw);
+			nodeHighlight(ListNode, kw, 'highlight');
+		}
+
+		let searchTm = null;
+		searchInput.addEventListener('input', e=>{
+			searchTm && clearTimeout(searchTm);
+			searchTm = setTimeout(()=>{
+				searchText(searchInput.value.trim());
+				searchTm = null;
+			}, 100);
+		})
+		document.body.addEventListener('keyup', e=>{
+			console.log(e.target);
+			if(e.code === 'Escape'){
+				searchForm.style.display = 'none';
+				searchInput.value = '';
+				return;
+			}
+			if(e.target === searchInput){
+				return;
+			}
+			if(keyVisible(e.keyCode)){
+				console.log(e.key, 'val:',searchInput.value);
+				searchForm.style.display = '';
+				searchInput.value = searchInput.value + e.key;
+				searchInput.focus();
+				searchInput.dispatchEvent(new Event('change'));
+			}
 		});
 	})();
 </script>
