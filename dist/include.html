@@ -18,7 +18,7 @@
 	.paths a:last-of-type{opacity:1}
 	.paths a:hover{color:var(--link-color); opacity:1}
 	.paths .icon{width:1.2em; height:1.2em;}
-	.paths>* {display:inline-block; vertical-align:middle}
+	.paths > *{display:inline-block; vertical-align:middle}
 
 	body{margin:var(--gap); background-color:#ffffff; box-shadow:1px 1px 20px #898585; box-sizing:border-box; overflow:hidden;}
 
@@ -27,12 +27,13 @@
 	.file-list li a{border-radius:5px; display:block; text-decoration:none; color:#333333; position:relative; border:5px solid transparent}
 	.file-list li a:hover{background-color:#eeeeee;}
 	.file-list li .title{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-	.file-list li .size, .file-list li .last-modified{color:#bbb; zoom:0.9}
-	.file-list li .thumb{width:var(--thumb-size); height:var(--thumb-size)}
-	.file-list li img.thumb{object-fit:contain; background-color:#ffffff;}
+	.file-list li .size, .file-list li .last-modified{color:#bbbbbb; zoom:0.9}
+	.file-list li .thumb{width:var(--thumb-size); height:var(--thumb-size); background:#ccc}
+	.file-list li .thumb img,
+	.file-list li .thumb svg {object-fit:contain; width:100%; height:100%;}
 
 	.file-list[data-mode="tile"] li{margin:.25em; float:left;}
-	.file-list[data-mode="tile"] a{width:15em; height:3em; overflow:hidden; padding-left:calc(var(--thumb-size) + 0.75em); }
+	.file-list[data-mode="tile"] a{width:15em; height:2.75em; overflow:hidden; padding-left:calc(var(--thumb-size) + 0.75em);}
 	.file-list[data-mode="tile"] .thumb{position:absolute; left:0;}
 	.file-list[data-mode="tile"] .size{margin-left:1em;}
 
@@ -64,21 +65,23 @@
 	.file-list [data-parent] .last-modified{display:none;}
 	.file-list [data-parent] .title{user-select:none; color:gray; margin-top:.5em;}
 
-	.options {position:relative; float:right; margin:-1.5em -0.5em 0 0;}
-	.options dt {border:1px solid transparent; border-radius:3px;}
-	.options dt .icon {width:25px; height:25px; cursor:pointer;}
-	.options dd {display:none; position:absolute; z-index:2; border-radius:5px; background-color:#fff; padding:3px 0; width:12em; right:0; box-shadow:1px 1px 5px #ccc;}
-	.options:hover dd {display:block;}
-	.options:hover dt {background-color:#ffffff; border-color:#ccc;}
+	.file-list .highlight{background-color:orange;}
 
-	.menu .cap {font-size:12px; padding:0.5em 1em; color:#bbb; user-select:none;}
-	.menu .sep:before {content:""; display:block; border-bottom:1px solid #ddd; margin:0 .5em}
-	.menu span {display:block; padding:0.5em 1em; cursor:pointer;}
-	.menu span:hover {background-color:#eee;}
+	.options{position:relative; float:right; margin:-1.5em -0.5em 0 0;}
+	.options dt{border:1px solid transparent; border-radius:3px;}
+	.options dt .icon{width:25px; height:25px; cursor:pointer;}
+	.options dd{display:none; position:absolute; z-index:2; border-radius:5px; background-color:#ffffff; padding:3px 0; width:12em; right:0; box-shadow:1px 1px 5px #cccccc;}
+	.options:hover dd{display:block;}
+	.options:hover dt{background-color:#ffffff; border-color:#cccccc;}
 
-	.kw-search-frm {position:fixed; --srch-width:40em; max-width:80vw; top:0.5em; width:var(--srch-width); margin:0 calc(50vw - var(--srch-width) / 2); background-color:#ffffff7a; padding:0.5em; box-sizing:border-box; box-shadow:1px 1px 50px #ababab;}
-	.kw-search-frm input[type=search] {display:block; width:100%; box-sizing:border-box; padding:0.5em; font-size:1.1rem; border:none;}
-	.kw-search-frm input[type=search]:focus {outline:none;}
+	.menu .cap{font-size:12px; padding:0.5em 1em; color:#bbbbbb; user-select:none;}
+	.menu .sep:before{content:""; display:block; border-bottom:1px solid #dddddd; margin:0 .5em}
+	.menu span{display:block; padding:0.5em 1em; cursor:pointer;}
+	.menu span:hover{background-color:#eeeeee;}
+
+	.kw-search-frm{position:fixed; --srch-width:40em; max-width:80vw; top:0.5em; width:var(--srch-width); margin:0 calc(50vw - var(--srch-width) / 2); background-color:#ffffff7a; padding:0.5em; box-sizing:border-box; box-shadow:1px 1px 50px #ababab;}
+	.kw-search-frm input[type=search]{display:block; width:100%; box-sizing:border-box; padding:0.5em; font-size:1.1rem; border:none;}
+	.kw-search-frm input[type=search]:focus{outline:none;}
 </style>
 <script>
 	const ONE_G = 1024 * 1024 * 1024;
@@ -89,19 +92,23 @@
 	const VIEW_MODE_TILE = 'tile';
 	const VIEW_MODE_LIST = 'list';
 
+	const TRANSPARENT_IMG_BG = '<svg t="1703298943448" viewBox="0 0 1975 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5993" width="200" height="200"><path d="M871.429328-0.000524h164.781109v164.781108H871.429328v-164.781108z m-341.331585 0h164.78006v164.781108h-164.78006v-164.781108z m-341.332634 0h164.781109v164.781108H188.765109v-164.781108z m506.112694 176.551h164.781633v164.780585h-164.781633v-164.780585z m-341.331585 0h164.781633v164.780585H353.546218v-164.780585z m-341.331061 0h164.78006v164.780585H12.215157v-164.780585zM871.429328 341.331061h164.781109v164.781109H871.429328V341.331061z m-341.331585 0h164.78006v164.781109h-164.78006V341.331061z m-341.332634 0h164.781109v164.781109H188.765109V341.331061z m506.112694 176.551h164.781633v164.781109h-164.781633V517.882061z m-341.331585 0h164.781633v164.781109H353.546218V517.882061z m-341.331061 0h164.78006v164.781109H12.215157V517.882061zM871.429328 682.66317h164.781109v164.780585H871.429328V682.66317z m-341.331585 0h164.78006v164.780585h-164.78006V682.66317z m-341.332634 0h164.781109v164.780585H188.765109V682.66317z m506.112694 176.550477h164.781633v164.781108h-164.781633v-164.781108z m-341.331585 0h164.781633v164.781108H353.546218v-164.781108z m-341.331061 0h164.78006v164.781108H12.215157v-164.781108z" fill="#cdcdcd" p-id="5994"></path></svg>';
 	const HOME_ICON = '<svg t="1703210335547" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16796" width="200" height="200"><path d="M946.5 505L560.1 118.8l-25.9-25.9c-12.3-12.2-32.1-12.2-44.4 0L77.5 505c-12.3 12.3-18.9 28.6-18.8 46 0.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8 12.1-12.1 18.7-28.2 18.7-45.3 0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204z m217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z" p-id="16797" fill="#707070"></path></svg>';
-	const FOLD_SVG = '<svg t="1703145101119" class="thumb" viewBox="0 0 1194 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6587" width="200" height="200"><path d="M1090.17345393 277.75145411H83.33333333V133.91715166a71.91715166 71.91715166 0 0 1 71.91715166-71.91715166h251.71002949l143.83430332 143.83430332H1018.25630228a71.91715166 71.91715166 0 0 1 71.91715165 71.91715078z" p-id="6588" fill="#8a8a8a"></path><path d="M83.33333333 349.66860576m71.91715166 0l863.00581729 0q71.91715166 0 71.91715165 71.91715166l0 431.50290821q0 71.91715166-71.91715165 71.91715166l-863.00581729 0q-71.91715166 0-71.91715166-71.91715166l0-431.50290821q0-71.91715166 71.91715166-71.91715166Z" p-id="6589" fill="#8a8a8a"></path></svg>';
-	const FILE_SVG = '<svg t="1703144775181" class="thumb" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6412" width="200" height="200"><path d="M257.49387688 75.70378895C197.5758639 75.70378895 148.41982411 124.85982871 148.41982411 184.7778417v654.4443166c0 59.91801299 49.15603978 109.07405276 109.07405277 109.07405275h509.01224624c59.91801299 0 109.07405276-49.15603978 109.07405277-109.07405275V315.15769278L636.12627204 75.70378895z m0 72.71603516H584.71603518v218.14810554h218.14810553v472.65422865c0 20.43320588-15.9248117 36.35801759-36.35801759 36.35801759h-509.01224624a35.92172138 35.92172138 0 0 1-36.35801759-36.35801759v-654.4443166c0-20.43320588 15.9248117-36.35801759 36.35801759-36.35801759z m399.93819347 51.41023688L751.45390383 293.85189446H657.43207035z" fill="#707070" p-id="6413"></path></svg>';
-	const FOLD_PARENT = '<svg t="1703168274004" class="thumb" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8086" width="200" height="200"><path d="M0 0h1024v1024H0V0z" fill="#8a8a8a" opacity=".01" p-id="8087"></path><path d="M463.735467 122.402133a68.266667 68.266667 0 0 1 96.529066 0l307.2 307.2a68.266667 68.266667 0 1 1-96.529066 96.529067L580.266667 335.4624V853.333333a68.266667 68.266667 0 1 1-136.533334 0V335.4624l-190.6688 190.6688a68.266667 68.266667 0 1 1-96.529066-96.529067l307.2-307.2z" fill="#8a8a8a" p-id="8088"></path></svg>';
+	const FOLD_SVG = '<svg t="1703145101119" class="icon" viewBox="0 0 1194 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6587" width="200" height="200"><path d="M1090.17345393 277.75145411H83.33333333V133.91715166a71.91715166 71.91715166 0 0 1 71.91715166-71.91715166h251.71002949l143.83430332 143.83430332H1018.25630228a71.91715166 71.91715166 0 0 1 71.91715165 71.91715078z" p-id="6588" fill="#8a8a8a"></path><path d="M83.33333333 349.66860576m71.91715166 0l863.00581729 0q71.91715166 0 71.91715165 71.91715166l0 431.50290821q0 71.91715166-71.91715165 71.91715166l-863.00581729 0q-71.91715166 0-71.91715166-71.91715166l0-431.50290821q0-71.91715166 71.91715166-71.91715166Z" p-id="6589" fill="#8a8a8a"></path></svg>';
+	const FILE_SVG = '<svg t="1703144775181" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6412" width="200" height="200"><path d="M257.49387688 75.70378895C197.5758639 75.70378895 148.41982411 124.85982871 148.41982411 184.7778417v654.4443166c0 59.91801299 49.15603978 109.07405276 109.07405277 109.07405275h509.01224624c59.91801299 0 109.07405276-49.15603978 109.07405277-109.07405275V315.15769278L636.12627204 75.70378895z m0 72.71603516H584.71603518v218.14810554h218.14810553v472.65422865c0 20.43320588-15.9248117 36.35801759-36.35801759 36.35801759h-509.01224624a35.92172138 35.92172138 0 0 1-36.35801759-36.35801759v-654.4443166c0-20.43320588 15.9248117-36.35801759 36.35801759-36.35801759z m399.93819347 51.41023688L751.45390383 293.85189446H657.43207035z" fill="#707070" p-id="6413"></path></svg>';
+	const FOLD_PARENT = '<svg t="1703168274004" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8086" width="200" height="200"><path d="M0 0h1024v1024H0V0z" fill="#8a8a8a" opacity=".01" p-id="8087"></path><path d="M463.735467 122.402133a68.266667 68.266667 0 0 1 96.529066 0l307.2 307.2a68.266667 68.266667 0 1 1-96.529066 96.529067L580.266667 335.4624V853.333333a68.266667 68.266667 0 1 1-136.533334 0V335.4624l-190.6688 190.6688a68.266667 68.266667 0 1 1-96.529066-96.529067l307.2-307.2z" fill="#8a8a8a" p-id="8088"></path></svg>';
+
+	const IMG_BG = URL.createObjectURL(new Blob([TRANSPARENT_IMG_BG],{type:'image/svg+xml'}));
+
 	const isDir = fileAttr => {
 		return fileAttr && fileAttr.trim() === '-';
 	}
 
-	const q = (selector)=>{
+	const q = (selector) => {
 		return document.querySelector(selector);
 	}
 
-	const qs = selector=>{
+	const qs = selector => {
 		return document.querySelectorAll(selector);
 	}
 
@@ -167,8 +174,7 @@
 		return html.join('<span class="sep">&gt;</span>');
 	}
 
-	const rm = n=>{
-		console.log(n);
+	const rm = n => {
 		return n.parentNode.removeChild(n);
 	}
 
@@ -186,31 +192,21 @@
 		}
 		return nodes.length === 1 ? nodes[0] : nodes;
 	}
-
-	const nodeHighlight = (node, pattern, hlClass) => {
-		let skip = 0;
-		if(node.nodeType === 3){
-			pattern = new RegExp(pattern, 'i');
-			let pos = node.data.search(pattern);
-			if(pos >= 0 && node.data.length > 0){ // .* matching "" causes infinite loop
-				let match = node.data.match(pattern); // get the match(es), but we would only handle the 1st one, hence /g is not recommended
-				let spanNode = document.createElement('span');
-				spanNode.className = hlClass; // set css
-				let middleBit = node.splitText(pos); // split to 2 nodes, node contains the pre-pos text, middleBit has the post-pos
-				let endBit = middleBit.splitText(match[0].length); // similarly split middleBit to 2 nodes
-				let middleClone = middleBit.cloneNode(true);
-				spanNode.appendChild(middleClone);
-				// parentNode ie. node, now has 3 nodes by 2 splitText()s, replace the middle with the highlighted spanNode:
-				middleBit.parentNode.replaceChild(spanNode, middleBit);
-				skip = 1; // skip this middleBit, but still need to check endBit
-			}
-		}else if(node.nodeType === 1 && node.childNodes && !/(script|style)/i.test(node.tagName)){
-			for(let i = 0; i < node.childNodes.length; ++i){
-				i += nodeHighlight(node.childNodes[i], pattern, hlClass);
-			}
-		}
-		return skip;
+	const regQuote = (str) => {
+		return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 	}
+
+	const highlightText = (text, kw, replaceTpl = '<span class="highlight">%s</span>') => {
+		let matched = false;
+		if(!kw){
+			return [text, false];
+		}
+		let html = text.replace(new RegExp(regQuote(kw), 'ig'), match => {
+			matched = true;
+			return replaceTpl.replace('%s', match);
+		});
+		return [html, matched];
+	};
 
 	(() => {
 		if(!isIndex()){
@@ -284,24 +280,24 @@
 
 		let listHtml = '';
 		FILE_ITEMS.forEach(item => {
-			let thumb = '';
+			let icon = '';
 			let ext = item.dir ? '' : resolveExt(item.title);
 			if(item.parent){
-				thumb = FOLD_PARENT;
+				icon = FOLD_PARENT;
 			}else if(item.dir){
-				thumb = FOLD_SVG;
+				icon = FOLD_SVG;
 			}else if(isImg(item.title)){
-				thumb = `<img class="thumb" loading="lazy" src="${item.link}">`;
+				icon = `<img loading="lazy" src="${item.link}">`;
 			}else{
-				thumb = FILE_SVG;
+				icon = FILE_SVG;
 			}
 			listHtml += `<li
 				data-type="${item.dir ? 'dir' : 'file'}" ${item.parent ? 'data-parent' : ''}
 				${ext.length ? `data-ext="${ext}"` : ''}
 				style="--ext:'${ext}'">
 		<a href="${item.link}" title="${item.parent ? '上一级' : item.title}">
-			${thumb}
-			<span class="title">${item.parent ? '上一级' : item.title}</span>
+			<span class="thumb">${icon}</span>
+			<span class="title" data-text="${item.title}">${item.parent ? '上一级' : item.title}</span>
 			<span class="last-modified">${item.LastModified}</span>
 			<span class="size">${item.SizeText}</span>
 		</a>
@@ -309,30 +305,46 @@
 		});
 
 		let ListNode = createNode(`<ul class="file-list" data-mode="${VIEW_MODE_TILE}">${listHtml}</ul>`);
-		document.body.insertBefore(ListNode,pre);
+		document.body.insertBefore(ListNode, pre);
 		rm(pre);
-		qs('hr').forEach(hr=>{
+		qs('hr').forEach(hr => {
 			rm(hr);
 		});
 
 		const searchForm = createNode(`<div class="kw-search-frm" style="display:none;"><input type="search" placeholder="search current page..."></div>`, document.body);
 		const searchInput = searchForm.querySelector('input[type=search]');
 
-		const searchText = kw=>{
-			console.log('searching kw:',kw);
-			nodeHighlight(ListNode, kw, 'highlight');
+		let searchTm = null;
+		const searchText = () => {
+			searchTm && clearTimeout(searchTm);
+			searchTm = setTimeout(() => {
+				let kw = searchInput.value.trim();
+				console.log('searching kw:', kw);
+				let firstMatchedLink;
+				let unmatchedTabindex = ListNode.children.length;
+				let tabIndex = 1;
+				ListNode.querySelectorAll('.title').forEach(titleEl => {
+					titleEl.parentNode.tabIndex = unmatchedTabindex;
+					if(!kw.length){
+						titleEl.innerHTML = titleEl.dataset.text;
+						return;
+					}
+					let [html, matched] = highlightText(titleEl.dataset.text, kw);
+					titleEl.innerHTML = html;
+					if(matched){
+						titleEl.parentNode.tabIndex = tabIndex++;
+					}
+					if(matched && !firstMatchedLink){
+						firstMatchedLink = titleEl.parentNode;
+					}
+				})
+				firstMatchedLink && firstMatchedLink.focus();
+				searchTm = null;
+			}, 10);
 		}
 
-		let searchTm = null;
-		searchInput.addEventListener('input', e=>{
-			searchTm && clearTimeout(searchTm);
-			searchTm = setTimeout(()=>{
-				searchText(searchInput.value.trim());
-				searchTm = null;
-			}, 100);
-		})
-		document.body.addEventListener('keyup', e=>{
-			console.log(e.target);
+		searchInput.addEventListener('input', searchText, false);
+		document.body.addEventListener('keydown', e => {
 			if(e.code === 'Escape'){
 				searchForm.style.display = 'none';
 				searchInput.value = '';
@@ -341,12 +353,26 @@
 			if(e.target === searchInput){
 				return;
 			}
+			if(e.ctrlKey || e.altKey){
+				return;
+			}
+			if(e.code === 'Backspace'){
+				if(!searchInput.value.length){
+					searchForm.style.display = 'none';
+					return;
+				}
+				searchInput.value = searchInput.value.substring(searchInput.value.length - 1, searchInput.value);
+			}
 			if(keyVisible(e.keyCode)){
-				console.log(e.key, 'val:',searchInput.value);
 				searchForm.style.display = '';
 				searchInput.value = searchInput.value + e.key;
-				searchInput.focus();
-				searchInput.dispatchEvent(new Event('change'));
+				searchText();
+			}
+		});
+
+		document.body.addEventListener('click', e => {
+			if(searchInput.value.trim().length === 0 && e.target !== searchInput && e.target !== searchForm){
+				searchForm.style.display = 'none';
 			}
 		});
 	})();
