@@ -95,16 +95,6 @@
 	.kw-search-frm{position:fixed; --srch-width:40em; max-width:80vw; top:0.5em; width:var(--srch-width); margin:0 calc(50vw - var(--srch-width) / 2); background-color:#ffffff7a; padding:0.5em; box-sizing:border-box; box-shadow:1px 1px 50px #ababab;}
 	.kw-search-frm input[type=search]{display:block; width:100%; box-sizing:border-box; padding:0.5em; font-size:1.1rem; border:none;}
 	.kw-search-frm input[type=search]:focus{outline:none;}
-
-	.popup{width:500px; --padding:1em; background-color:#ffffff; box-shadow:1px 1px 80px 0px #c1c1c1; position:fixed; left:50%; top:50%; transform:translate(-50%, -71.8%); border-radius:5px; z-index:1; border:1px solid #cccccc}
-	.popup-ti{padding:var(--padding) 0.5em calc(var(--padding) / 2) 0.5em; margin:0 var(--padding); border-bottom:1px solid #cccccc;}
-	.popup-ctn{padding:0.5em calc(var(--padding) * 2);}
-	.popup-op{padding:var(--padding); text-align:right}
-
-	.popup .opt ~ .opt{margin-top:.5em;}
-	.popup .opt > dt{padding:0.5em 0; font-weight:bold;}
-	.popup label ~ label{margin-left:1em;}
-	.popup label > input{margin-right:0.25em;}
 </style>
 <script>
 	const ONE_G = 1024 * 1024 * 1024;
@@ -144,8 +134,6 @@
 	const FOLD_SVG = '<svg t="1703145101119" class="icon" viewBox="0 0 1194 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6587" width="200" height="200"><path d="M1090.17345393 277.75145411H83.33333333V133.91715166a71.91715166 71.91715166 0 0 1 71.91715166-71.91715166h251.71002949l143.83430332 143.83430332H1018.25630228a71.91715166 71.91715166 0 0 1 71.91715165 71.91715078z" p-id="6588" fill="#8a8a8a"></path><path d="M83.33333333 349.66860576m71.91715166 0l863.00581729 0q71.91715166 0 71.91715165 71.91715166l0 431.50290821q0 71.91715166-71.91715165 71.91715166l-863.00581729 0q-71.91715166 0-71.91715166-71.91715166l0-431.50290821q0-71.91715166 71.91715166-71.91715166Z" p-id="6589" fill="#8a8a8a"></path></svg>';
 	const FILE_SVG = '<svg t="1703144775181" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6412" width="200" height="200"><path d="M257.49387688 75.70378895C197.5758639 75.70378895 148.41982411 124.85982871 148.41982411 184.7778417v654.4443166c0 59.91801299 49.15603978 109.07405276 109.07405277 109.07405275h509.01224624c59.91801299 0 109.07405276-49.15603978 109.07405277-109.07405275V315.15769278L636.12627204 75.70378895z m0 72.71603516H584.71603518v218.14810554h218.14810553v472.65422865c0 20.43320588-15.9248117 36.35801759-36.35801759 36.35801759h-509.01224624a35.92172138 35.92172138 0 0 1-36.35801759-36.35801759v-654.4443166c0-20.43320588 15.9248117-36.35801759 36.35801759-36.35801759z m399.93819347 51.41023688L751.45390383 293.85189446H657.43207035z" fill="#707070" p-id="6413"></path></svg>';
 	const FOLD_PARENT = '<svg t="1703168274004" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8086" width="200" height="200"><path d="M0 0h1024v1024H0V0z" fill="#8a8a8a" opacity=".01" p-id="8087"></path><path d="M463.735467 122.402133a68.266667 68.266667 0 0 1 96.529066 0l307.2 307.2a68.266667 68.266667 0 1 1-96.529066 96.529067L580.266667 335.4624V853.333333a68.266667 68.266667 0 1 1-136.533334 0V335.4624l-190.6688 190.6688a68.266667 68.266667 0 1 1-96.529066-96.529067l307.2-307.2z" fill="#8a8a8a" p-id="8088"></path></svg>';
-
-	const IMG_BG = URL.createObjectURL(new Blob([TRANSPARENT_IMG_BG], {type: 'image/svg+xml'}));
 
 	const isDir = fileAttr => {
 		return fileAttr && fileAttr.trim() === '-';
@@ -245,26 +233,6 @@
 	}
 	const regQuote = (str) => {
 		return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
-	}
-
-	const showPopup = (html, onClose) => {
-		let popupHtml = `
-				<div class="popup">
-					<div class="popup-ti">设置</div>
-					<div class="popup-ctn">
-						${html}
-					</div>
-					<div class="popup-op">
-						<input type="button" class="btn" value="关闭">
-					</div>
-				</div>
-			`;
-		let ctn = createNode(popupHtml, document.body);
-		ctn.querySelector('.popup-op .btn').addEventListener('click', e => {
-			rm(ctn);
-			onClose && onClose();
-		});
-		return ctn;
 	}
 
 	const getOpt = () => {
